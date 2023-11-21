@@ -1,0 +1,384 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : SET_SPREADSHEET
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x1a58dd1c02da1b1d
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  type_code : 31
+  p_codes :
+   -
+     code : |1-
+      
+      XSLXSelection is Structure
+      	ActiveSheet		is boolean
+      	Cell			is string
+      	Ranges			is string
+      	HiddenRows		is array of int
+      	HiddenColumns	is array of int
+      end
+     type : 720896
+  procedures :
+   -
+     name : XSLXLoadCellInfos
+     internal_properties : CAAAAAgAAACE5GV+KHeU2/rIu843L6+YrncUjtacnCDJUH47hF3kR5/Vk914ucOyKlsklkQdnXKDJ2q8YQs6JQyTImjcjuhA8pdiGFDwvpab73tUcPPhzzKwI8T9/46yXL1pJBqbrEiR7fFQL2FChpgQ9xGlq6dMCTZPMxfdgy/aaEPqVJIPgFTqW/WsmcYhy6LB1PMp9Cg2vnGGx8pJfoc20clzsspwZq+U7Iorub/tKNVgkbWyriZBvKNfBNxCQVUEx8edB+x/
+     procedure_id : 1898510355313400605
+     type_code : 15
+     code : |1-
+      // Summary: Returns the selected cells stored in an XSLSX file
+      // Syntax:
+      //[ <Result> = ] XLSXLoadCellInfo (<sPath> is string)
+      //
+      // Parameters:
+      //	sPath (ANSI string): Path of XSLSX file
+      // Return value:
+      // 	array: Selected cells per worksheet
+      //
+      Procédure XSLXLoadCellInfos(sPath is string) : array of XSLXSelection
+      
+      stSelection			is XSLXSelection
+      arrSelection		is array of XSLXSelection
+      nWorksheetSubscript	is int	= 1
+      
+      // Read the additional file information
+      if not fExtractPath(sPath, fExtension)[[2 to]] ~= "xlsx" then result arrSelection
+      
+      XSLX is a zipArchive
+      
+      // Opens the XLSX file like a ZIP archive
+      if zipOpen(XSLX, sPath, zipRead) <> 0 then result arrSelection
+      
+      while True
+      	
+      	// By default
+      	VariableReset(stSelection)
+      	stSelection.Cell = "A1"
+      	
+      	// Checks the existence of /xl/worksheets/sheet1.xml file
+      	nDescSheet is int = Seek(XSLX..File, asLinear, "Name", "xl\worksheets\sheet[%nWorksheetSubscript%].xml")
+      	if nDescSheet < 1 then break
+      	
+      	// Retrieves the content of /xl/worksheets/sheet<%1%>.xml file
+      	zipFileInfo	is a zipArchivedFile	= XSLX.File[ nDescSheet ]
+      	
+      	// Loads the XML document 
+      	xmlFileInfo	is a xmlDocument		= XMLOpen( zipFileInfo..Content , fromString)
+      	
+      	// If the XML document was loaded and if the selection information is available
+      	if ErrorOccurred = False then
+      		
+      		if xmlFileInfo.worksheet.sheetViews.sheetView[1].selection..Exist then
+      			
+      			// Flags the active worksheet
+      			stSelection.ActiveSheet	= xmlFileInfo.worksheet.sheetViews.sheetView[1]:arrSelectionnee..Empty = False _and_ (xmlFileInfo.worksheet.sheetViews.sheetView[1]:arrSelectionnee..Value = "1")
+      			
+      			// Reads the active cell
+      			stSelection.Cell		= (xmlFileInfo.worksheet.sheetViews.sheetView[1].selection:activeCell..Value)
+      			
+      			// Reads the other active ranges
+      			stSelection.Ranges		= xmlFileInfo.worksheet.sheetViews.sheetView[1].selection:sqref..Value
+      		end
+      		
+      		if xmlFileInfo.worksheet.cols..Exist then
+      			
+      			// Enumerates the cols
+      			for each 'col' of xmlFileInfo.worksheet.cols on col
+      				if 'col':hidden..Value = "1" then
+      					Add(stSelection.HiddenColumns, Val( 'col':min..Value ))
+      				end
+      			end	
+      		end
+      		
+      		if xmlFileInfo.worksheet.sheetData..Exist then
+      			
+      			// Enumerates the sheetData.row
+      			for each 'row' of xmlFileInfo.worksheet.sheetData on row
+      				if 'row':hidden..Value = "1" then
+      					Add(stSelection.HiddenRows, Val( 'row':r..Value ))
+      				end
+      			end				
+      		end
+      	end
+      	
+      	Add(arrSelection, stSelection)
+      	
+      	// Next worksheet
+      	nWorksheetSubscript ++
+      end
+      
+      // Closes the archive
+      zipClose(XSLX)
+      
+      result arrSelection
+     type : 458752
+   -
+     name : XSLXSaveCellInfos
+     internal_properties : CAAAAAgAAAASZ5KCURDTQZzsn0F143BN+FdCNRZkPw6aKCtkpLnSffLMubSJfTdpKGJgWdyY7GIFzuMBlNhymNIk6JHcsKPGGZoW2tOkqw3H/2pSaGGekmnDjK7N5FaSgvx+Lmmn+zrany51agzBeX+MnwUl3DoWsgyzSVJnoP/0FndKEGr/nWR6nV1TnfK9zx8rVMGD5z732xxv/e2P6Qfs1ZdQbnRO/+LqIaU/xyHzDR4TWO2tkSqlX8mq9RbPgcvOBFETP2X0dYiDJvWgeQn2A6rEElpeYhNLz32qhHw7167iu7m7kysOJ3fzte0gDZw+AFsY7MN6DbBizqOpArdlvKzEbe7HpN1rfS/eTmjlmJ4zfT1Wa0egY92S7yatJrkJ2gSMnWyPNulipkqAmd/VVgGgv0zKEaMYGCRv9TAa
+     procedure_id : 1898510355313466141
+     type_code : 15
+     code : |1-
+      // Summary: Saves the information about the selected cell in the XSLSX file
+      // Syntax:
+      //XLSXSauveCellInfo (<sPath> is string, <arrSelection> is array)
+      //
+      // Parameters:
+      //	sPath (UNICODE string): Path of XSLSX file
+      // 	array: Ranges of selected cells per worksheet
+      // Return value:
+      // 	None
+      //
+      // Automatic process of exceptions:   run CASE EXCEPTION:
+      //
+      Procédure XSLXSaveCellInfos(sPath is string, arrSelection is array of XSLXSelection)
+      
+      stSelection		is XSLXSelection
+      i				is int
+      sArchive		is string	= sPath
+      bTempLocalCopy	is boolean
+      sLocalPath		is string
+      
+      // No cell
+      if arrSelection..Count = 0 then return
+      
+      // if the fiile saved is not an XLSX file
+      if not fExtractPath(sPath, fExtension)[[2 to]] ~= "xlsx" then return
+      
+      XSLX is a zipArchive
+      
+      // If the file is read-only
+      if fAttributeReadOnly( sPath ) then return
+      
+      // Checks if the file is on the network
+      if sPath [= "\\" _or_ fDriveInfo( fExtractPath( sPath, fDrive ) + [ ":" ], fdDriveType ) = fdRemote then
+      
+      	// Temporary local path
+      	sLocalPath		= fTempPath() + [ fSep ] + fExtractPath( sPath, fFileName + fExtension )
+      
+      	// Starts the copy
+      	bTempLocalCopy	= fCopyFile( sPath, sLocalPath )
+      	if bTempLocalCopy then sArchive = sLocalPath
+      end
+      
+      // Opens the XLSX file like a ZIP archive
+      if zipOpen(XSLX, sArchive, zipWrite) <> 0 then return
+      
+      for each stSelection, i of arrSelection
+      	
+      	// Checks the existence of /xl/worksheets/sheet1.xml file
+      	nDescSheet1 is int = Seek(XSLX..File, asLinear, "Name", "xl\worksheets\sheet[%i%].xml")
+      	if nDescSheet1 > 0 then
+      		
+      		// Retrieves the content of /xl/worksheets/sheet1.xml file
+      		zipFileInfo	is a zipArchivedFile	= XSLX.File[ nDescSheet1 ]
+      		
+      		// Loads the XML document 
+      		xmlFileInfo	is a xmlDocument		= XMLOpen( zipFileInfo..Content , fromString)
+      		if ErrorOccurred = False then
+      			
+      			// Declare the namespace for the selection backup
+      			if Seek(xmlFileInfo.worksheet..NamespaceDeclared, asLinear, "Name", "x14ac") < 1 then
+      				xmlX14AC is a xmlNamespace
+      				xmlX14AC..Name	= "x14ac"
+      				xmlX14AC..URI	= "http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac"				
+      				Add(xmlFileInfo.worksheet..NamespaceDeclared, xmlX14AC)
+      			end
+      			
+      			xmlSelection is a xmlNode
+      			xmlSelection..Name				= "selection"
+      			
+      			// Creates thet node <selection activeCell="" sqref=""/>
+      			xmlSelection:activeCell..Value	= stSelection.Cell
+      			xmlSelection:sqref..Value		= stSelection.Ranges
+      			
+      			// Writes the active worksheet				
+      			if stSelection.ActiveSheet then xmlFileInfo.worksheet.sheetViews.sheetView[1]:arrSelectionnee = "1"
+      			// Writes the active cell
+      			Add(xmlFileInfo.worksheet.sheetViews.sheetView[1]..ChildNode, xmlSelection)
+      			
+      			// Hidden columns
+      			for each nColumn of stSelection.HiddenColumns
+      				
+      				// Finds whether an entry exists for the specified column
+      				xmlXCol is a xpathResult = XMLExecuteXPath(xmlFileInfo, "/worksheet/cols/col[@min='[%nColumn%]'")
+      				
+      				// An entry is found
+      				if xmlXCol <> Null then
+      					
+      					// Flag it as "hidden" with a null width
+      					xmlXCol..Attribute["hidden"]	= "1" 
+      					xmlXCol..Attribute["width"]		= "0" 
+      					
+      					// The entry must be created
+      				else
+      					
+      					// Creates the "col" node
+      					xmlCol is a xmlNode
+      					xmlCol..Name	= "col"
+      					xmlCol:min		= "[%nColumn%]"
+      					xmlCol:max		= "[%nColumn%]"
+      					xmlCol:width	= "0"
+      					xmlCol:hidden	= "1"
+      					Add(xmlFileInfo.worksheet.cols, xmlCol)
+      				end					
+      			end
+      			
+      			// Hidden rows
+      			for each nRow of stSelection.HiddenRows
+      				
+      				// Finds whether an entry exists for the specified row
+      				xmlXRow is a xpathResult = XMLExecuteXPath(xmlFileInfo, "/worksheet/sheetData/row[@r='[%nRow%]'")
+      				
+      				// An entry is found
+      				if xmlXRow <> Null then
+      					
+      					// Flag it as "hidden"
+      					xmlXRow..Attribute["hidden"] = "1" 
+      					
+      					// The entry must be created
+      				else
+      					
+      					// Creates the "row" node
+      					xmlRow is a xmlNode
+      					xmlRow..Name	= "row"
+      					xmlRow:r		= "[%nRow%]"
+      					xmlRow:hidden	= "1"
+      					Add(xmlFileInfo.worksheet.sheetData, xmlRow)
+      				end					
+      			end
+      			
+      			// Creates a copy of file information
+      			zipSheetInfo is a zipArchivedFile <= zipFileInfo
+      			
+      			// Save
+      			zipSheetInfo..Content = XMLBuildString( xmlFileInfo, XMLDocumentDefault )			 	
+      			
+      			// Deletes the previous description
+      			zipDeleteFile( XSLX, nDescSheet1 )			
+      			
+      			// Adds the new description
+      			zipAddFile( XSLX, zipSheetInfo )
+      		end			
+      	end
+      end
+      
+      // Closes the archive
+      zipClose( XSLX )
+      
+      if bTempLocalCopy then
+      
+      	// Copies the file again
+      	fCopyFile( sLocalPath, sPath )
+      
+      	// Deletes the local file
+      	fDelete( sLocalPath )
+      end
+      
+      case exception:
+      return
+     type : 458752
+   -
+     name : RangeDecompose
+     procedure_id : 1898510355313531677
+     type_code : 15
+     code : |1-
+      // Summary: Breaks a range of cells
+      // Syntax:
+      //[ <Result> = ] RangeBreak (<sRange> is string)
+      //
+      // Parameters:
+      //	sRange (ANSI string): Range
+      // Return value:
+      // 	multi-value: Broken range
+      //
+      Procédure RangeDecompose(sRange is string) : (string, int, string, int)
+      
+      sCol1, sCol2	are strings
+      nRow1, nRow2	are int	
+      
+      // It is a range
+      if sRange [=] ":" then
+      	
+      	// Breaks the range of cells
+      	if MatchRegularExpression(sRange, "([A-Z]+)([0-9]+)[:]([A-Z]+)([0-9]+)", sCol1, nRow1, sCol2, nRow2) then
+      		result (sCol1, nRow1, sCol2, nRow2)
+      	end
+      	
+      	// It is a cell
+      else 
+      	
+      	// Breaks the cell	
+      	if MatchRegularExpression(sRange, "([A-Z]+)([0-9]+)", sCol1, nRow1) then
+      		result (sCol1, nRow1, sCol1, nRow1)
+      	end
+      end
+      
+      result ("", 0, "", 0)
+     type : 458752
+   -
+     name : NextColumn
+     procedure_id : 1898510355313597213
+     type_code : 15
+     code : |1-
+      // Summary: Returns the next column
+      // Syntax:
+      //[ <Result> = ] NextColumn (<sColumn> is string)
+      //
+      // Parameters:
+      //	sColumn (ANSI string): Column
+      // Return value:
+      // 	ANSI string: Next column
+      //
+      Procédure NextColumn(local sColumn is string) : string
+      
+      nSize	is int	= Length(sColumn)
+      bOK		is boolean
+      
+      // End of sequence?
+      if sColumn[ nSize ] = "Z" then
+      	
+      	sColumn[ nSize ] = "A"
+      	
+      	for i = nSize - 1 _to_ 1 step -1
+      		
+      		// Z: increment before
+      		if sColumn[ i ] = "Z" then 
+      			sColumn[ i ] = "A"
+      			continue
+      		end
+      		
+      		// Increment 
+      		sColumn[ i ]	= Charact( Asc( sColumn[ i ] ) + 1 )
+      		bOK				= True
+      		break
+      	end
+      	
+      	// Button of sequence: ZZ for example
+      	if bOK = False then
+      		
+      		// New sequence
+      		sColumn = RepeatString("A", nSize + 1)
+      	end
+      else
+      	// Name of column with one character
+      	sColumn[ nSize ] = Charact( Asc( sColumn[ nSize ] ) + 1 )
+      end
+      
+      result sColumn
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_SansNom1
+resources :
+ string_res :
+  identifier : 0x1a1e96fc009c3bdf
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

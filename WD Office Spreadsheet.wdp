@@ -1,0 +1,99 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : WD Office Spreadsheet
+ major_version : 28
+ minor_version : 0
+ type : 4097
+ description : ""
+ subtype : 0
+project :
+ identifier : 0x0
+ internal_properties : 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
+ configurations :
+  -
+    name : Windows 32-bit executable
+    internal_properties : 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
+    configuration_id : 9663666347216825994
+    type : 1
+    generation_name : WD Office Spreadsheet.exe
+    version :
+     major_version : 23
+     minor_version : 31
+     internal_generation_version : 8
+     autoincrement_version : false
+    icon_filename : .\description.ico
+    language : 2
+ elements :
+  identifier : 0x4a1452fa00d91b2e
+  elements :
+   -
+     name : SET_SPREADSHEET
+     identifier : 0x4a1e96ff01a3467e
+     internal_properties : CAAAAAgAAADjX9vP/KkBGjtL2Tahbs5ciyqyKp3FNT9Savag/gwO2hLC2mwgmSZ0iLwmkhLOqh7mbg==
+     physical_name : .\SET_SPREADSHEET.wdg
+     type : 7
+   -
+     name : WIN_SPREADSHEET
+     identifier : 0x4a1540ff00e46563
+     internal_properties : CAAAAAgAAAAIBnAsm8Boc3LJ7AvjQi6ycjG54dybKylOCxdpqnAkhESu0RTTdVr2HwP9+7s1zcMNFQ==
+     physical_name : .\WIN_SPREADSHEET.wdw
+     type : 2
+   -
+     name : TEST_WIN_SPREADSHEET
+     identifier : 0x4aec5b460017a1f9
+     internal_properties : CAAAAAgAAAC8mpSAP2RMX26MQdCFp0pgFkX9VWA+l9hCjquwykBclLxG11q4SI6pO+/p11+RaV+pqQ==
+     physical_name : .\TEST_WIN_SPREADSHEET.wxt
+     type : 17
+  other_elements : []
+  net_assemblies : []
+  uwp_api : []
+  external_components : []
+  internal_components :
+   -
+     physical_name : .\WD Office\WD Office.wci
+ report_and_queries_enabled : false
+ data_directory : <RepExeOuRepDonneesCommun>
+ common_generation_directory : true
+ languages :
+  - en-GB
+ code_elements :
+  internal_properties : CAAAAAgAAACQlmd490S5+tcyXH2rzb8Bb5aj0m97boMarD7YK9xu0c7RQxIJb9eyokPdTUQ4bTQLUGlQmmYrnzH0T6XhND6dGTGbaA==
+  type_code : 0
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAADVfMMPxmOUAJoLxEznTOhkxV/G9/F0hl57OeXp0CpmlCiV8NyBoDPx0F922EOCNrcYZ8wNU1PZo8G8l+yY40+Xhps8ApPfx5PAmAODLKZmxXh0tnLOgcNwjrhEWYbaRqC+Mbu7d0sxjv8wLNRT9SL+Xs9c+HSxf4sJ4TQ9rhhi
+     code : |1-
+      
+      constant SPREADSHEET_EXT_XLSX = "xlsx"
+      
+      // Declares the supported extension to the Office component
+      // The component manages the association from the command line (/shellassoc, /shellunassoc)
+      DeclareExtensions( SPREADSHEET_EXT_XLSX, "Excel files" )
+     type : 196608
+   -
+     code : |1-
+      
+     type : 196621
+   -
+     type : 196627
+     enabled : false
+  orphans :
+   -
+     name : Windows 32-bit executable
+     identifier : 0x4a1452fa00da1b2e
+     code_elements :
+      type_code : 159
+      p_codes : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+rad :
+ internal_properties : CAAAAAgAAABhIL0UXeZmxDJxY3Xy0Q==
+project_explorer :
+ explorer_type : project
+resources :
+ string_res :
+  identifier : 0x0
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAAAd98VSJfHHqE3P0QHwrwdhn7ig8dWBR6valpUTgnAMTVXiDg==
